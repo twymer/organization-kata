@@ -22,7 +22,11 @@ class Organization
     if @users.has_key? user.id
       @users[user.id]
     else
-      :disabled
+      if @parent_org
+        @parent_org.user_permission(user)
+      else
+        :disabled
+      end
     end
   end
 end
