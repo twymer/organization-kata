@@ -37,5 +37,11 @@ describe Organization do
       @root_org.add_user(@user, :admin)
       @sub_org.user_permission(@user).should == :admin
     end
+
+    it "should not inherit a permission if one is already set" do
+      @root_org.add_user(@user, :admin)
+      @sub_org.add_user(@user, :user)
+      @sub_org.user_permission(@user).should == :user
+    end
   end
 end
