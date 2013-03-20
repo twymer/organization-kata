@@ -31,6 +31,8 @@ describe Organization do
   describe "inheritence" do
     before do
       @sub_org = Organization.new(@root_org)
+      @sibling_org = Organization.new(@root_org)
+      @grandchild_org = Organization.new(@sub_org)
     end
 
     it "should inherit admin status from parent" do
@@ -42,6 +44,17 @@ describe Organization do
       @root_org.add_user(@user, :admin)
       @sub_org.add_user(@user, :user)
       @sub_org.user_permission(@user).should == :user
+    end
+
+    it "should not inherit from siblings" do
+      @sub_org.add_user(@user, :admin)
+      @sibling_org.user_permission(@user).should == :disabled
+    end
+
+    it "should inherit from nearest parent" do
+      @root_org.add_user(@user, :user)
+      @sub_org.add_user(@user, :admin)
+      @grandchild_org.user_permission(@user).should == :admin
     end
   end
 end
